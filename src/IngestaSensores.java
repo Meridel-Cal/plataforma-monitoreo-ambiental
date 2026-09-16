@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class IngestaSensores {
 
-    private static final String ARCHIVO = "lecturas_ampliadas.csv";
+    private static final String ARCHIVO = "data/lecturas_ampliadas.csv"; // Asegúrate de que esta ruta sea correcta
     private static final int CAMPOS_ESPERADOS = 5;
 
     private static int descartadasPorFormato = 0;
@@ -38,15 +38,19 @@ public class IngestaSensores {
         System.out.println();
         System.out.println("PM2.5 promedio (repositorio): " + repositorio.promedioPm25());
         System.out.println();
+
+        // FASE 2.1: Evidencia del experimento de medición
+        System.out.println("=== MÉTRICAS DE REDIMENSIONAMIENTO ===");
+        System.out.println("Redimensionamientos: " + repositorio.getRedimensionamientos());
+        System.out.println("Copias realizadas:   " + repositorio.getCopiasRealizadas());
+        System.out.println();
+
         System.out.println("=== PERFIL HORARIO DE LA CIUDAD ===");
         for (int h = 0; h < 24; h++) {
             System.out.printf("Hora %02d -> PM2.5 promedio: %.2f%n", h, analizador.promedioDeHora(h));
         }
     }
 
-    /**
-     * Lee el archivo linea por linea y alimenta el repositorio y la matriz.
-     */
     private static void cargarArchivo(RepositorioLecturas repositorio,
                                       AnalizadorMatriz analizador) throws IOException {
         BufferedReader lector = new BufferedReader(new FileReader(ARCHIVO));
@@ -68,10 +72,6 @@ public class IngestaSensores {
         lector.close();
     }
 
-    /**
-     * Convierte una linea del CSV en un objeto LecturaSensor.
-     * @return la lectura, o null si la linea esta mal formada
-     */
     private static LecturaSensor construirLectura(String linea) {
         String[] campos = linea.split(",");
         if (campos.length != CAMPOS_ESPERADOS) {
