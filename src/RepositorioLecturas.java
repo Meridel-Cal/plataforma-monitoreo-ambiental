@@ -20,87 +20,88 @@ public class RepositorioLecturas {
     private LecturaSensor[] lecturas;
     private int cantidad;
 
+    // Contadores para el experimento de la Fase 2.1
+    private int redimensionamientos = 0;
+    private int copiasRealizadas = 0;
+
     public RepositorioLecturas() {
         this.lecturas = new LecturaSensor[CAPACIDAD_INICIAL];
         this.cantidad = 0;
     }
 
-    // ---------- OPERACIONES DEL CONTRATO ----------
-
-    /**
-     * Agrega una lectura al final del repositorio.
-     * @return true si se agrego, false si no habia espacio
-     */
     public boolean agregar(LecturaSensor lectura) {
         if (cantidad == lecturas.length) {
-            return false;
+            redimensionar();
         }
         lecturas[cantidad] = lectura;
         cantidad++;
         return true;
     }
 
-    /**
-     * Devuelve la lectura que esta en la posicion indicada.
-     */
     public LecturaSensor obtener(int posicion) {
+        if (posicion < 0 || posicion >= cantidad) {
+            return null;
+        }
         return lecturas[posicion];
     }
 
-    /**
-     * Cantidad de lecturas almacenadas actualmente.
-     */
     public int tamano() {
         return cantidad;
     }
 
-    /**
-     * Elimina la lectura de la posicion indicada.
-     *
-     * VERSION INGENUA: revisala con cuidado antes de confiar en ella.
-     */
     public void eliminar(int posicion) {
-        lecturas[posicion] = null;
+        if (posicion < 0 || posicion >= cantidad) {
+            return;
+        }
+        // Estrategia de compactación
+        for (int i = posicion; i < cantidad - 1; i++) {
+            lecturas[i] = lecturas[i + 1];
+        }
+        lecturas[cantidad - 1] = null; // Evitar fuga de memoria
+        cantidad--;
     }
 
-    /**
-     * Busca la primera lectura de una estacion.
-     * TODO 1: implementar. Devolver null si no existe.
-     */
     public LecturaSensor buscarPorEstacion(String idSensor) {
+        for (int i = 0; i < cantidad; i++) {
+            if (lecturas[i].getIdSensor().equals(idSensor)) {
+                return lecturas[i];
+            }
+        }
         return null;
     }
 
-    /**
-     * Reemplaza la lectura de una posicion por otra.
-     * TODO 2: implementar, verificando que la posicion sea valida.
-     */
     public void actualizar(int posicion, LecturaSensor nueva) {
-    }
-
-    /**
-     * Duplica la capacidad interna del arreglo conservando el contenido.
-     *
-     * TODO 3: implementar. Despues llamalo desde agregar() cuando
-     * el arreglo se llene, para que el repositorio deje de tener techo.
-     *
-     * Pista: no puedes "estirar" un arreglo en Java. Tienes que crear
-     * uno nuevo mas grande y copiar. Piensa cuantas copias implica eso.
-     */
-    private void redimensionar() {
-    }
-
-    /**
-     * Promedio de PM2.5 de todas las lecturas almacenadas.
-     *
-     * TODO 4: revisar. Este metodo asume algo que puede no ser cierto
-     * despues de que alguien llame a eliminar().
-     */
-    public double promedioPm25() {
-        double suma = 0;
-        for (int i = 0; i < cantidad; i++) {
-            suma = suma + lecturas[i].getPm25();
+        if (posicion >= 0 && posicion < cantidad) {
+            lecturas[posicion] = nueva;
         }
-        return suma / cantidad;
     }
+
+    private void redimensionar() {
+        int nuevaCapacidad = lecturas.length * 2;
+        LecturaSensor[] nuevoArreglo = new LecturaSensor[nuevaCapacidad];
+
+        redimensionamientos++;
+        for (int i = 0; i < cantidad; i++) {
+            nuevoArreglo[i] = lecturas[i];
+            copiasRealizadas++;
+        }
+        this.lecturas = nuevoArreglo;
+    }
+
+    public double promedioPm25() {
+        if (cantidad == 0) return 0.0;
+        double suma = 0;
+        int elementosReales = 0;
+        for (int i = 0; i < cantidad; i++) {
+            if (lecturas[i] != null) {
+                suma += lecturas[i].getPm25();
+                elementosReales++;
+            }
+        }
+        return elementosReales == 0 ? 0.0 : suma / elementosReales;
+    }
+
+    // Getters para el experimento
+    public int getRedimensionamientos() { return redimensionamientos; }
+    public int getCopiasRealizadas() { return copiasRealizadas; }
 }
