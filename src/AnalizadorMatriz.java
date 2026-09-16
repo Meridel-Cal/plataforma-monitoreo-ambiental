@@ -15,63 +15,62 @@ public class AnalizadorMatriz {
     private static final int NUM_ESTACIONES = 9;
     private static final int NUM_HORAS = 24;
 
-    private double[][] pm25PorEstacionHora;
+    // Usamos Double (objeto) en lugar de double (primitivo) para permitir null
+    private Double[][] pm25PorEstacionHora;
 
     public AnalizadorMatriz() {
-        this.pm25PorEstacionHora = new double[NUM_ESTACIONES][NUM_HORAS];
+        this.pm25PorEstacionHora = new Double[NUM_ESTACIONES][NUM_HORAS];
     }
 
-    /**
-     * Convierte "EST-004" en el indice de fila 3.
-     */
     private int indiceDeEstacion(String idSensor) {
         String numero = idSensor.substring(4);
         return Integer.parseInt(numero) - 1;
     }
 
-    /**
-     * Ubica una lectura en su celda correspondiente.
-     */
     public void registrar(LecturaSensor lectura) {
         int fila = indiceDeEstacion(lectura.getIdSensor());
         int columna = lectura.getHora();
         pm25PorEstacionHora[fila][columna] = lectura.getPm25();
     }
 
-    /**
-     * Promedio de PM2.5 de una hora del dia, sobre todas las estaciones.
-     *
-     * TODO 1: este metodo tiene un problema serio. Ejecutalo primero,
-     * mira los resultados de las horas 09, 10, 11 y 12, y averigua por que.
-     * Pista: revisa cuantas filas trae EST-003 en el archivo.
-     */
     public double promedioDeHora(int hora) {
         double suma = 0;
+        int estacionesQueReportaron = 0;
         for (int fila = 0; fila < NUM_ESTACIONES; fila++) {
-            suma = suma + pm25PorEstacionHora[fila][hora];
+            if (pm25PorEstacionHora[fila][hora] != null) {
+                suma += pm25PorEstacionHora[fila][hora];
+                estacionesQueReportaron++;
+            }
         }
-        return suma / NUM_ESTACIONES;
+        return estacionesQueReportaron == 0 ? 0.0 : suma / estacionesQueReportaron;
     }
 
-    /**
-     * Promedio de PM2.5 de una estacion a lo largo del dia.
-     * TODO 2: implementar, con el mismo cuidado del TODO 1.
-     */
     public double promedioDeEstacion(int fila) {
-        return 0;
+        if (fila < 0 || fila >= NUM_ESTACIONES) return 0.0;
+        double suma = 0;
+        int horasQueReportaron = 0;
+        for (int hora = 0; hora < NUM_HORAS; hora++) {
+            if (pm25PorEstacionHora[fila][hora] != null) {
+                suma += pm25PorEstacionHora[fila][hora];
+                horasQueReportaron++;
+            }
+        }
+        return horasQueReportaron == 0 ? 0.0 : suma / horasQueReportaron;
     }
 
-    /**
-     * Hora del dia con mayor contaminacion promedio en la ciudad.
-     * TODO 3: implementar.
-     */
     public int horaMasContaminada() {
-        return -1;
+        int mejorHora = -1;
+        double mayorPromedio = -1.0;
+        for (int hora = 0; hora < NUM_HORAS; hora++) {
+            double promedio = promedioDeHora(hora);
+            if (promedio > mayorPromedio) {
+                mayorPromedio = promedio;
+                mejorHora = hora;
+            }
+        }
+        return mejorHora;
     }
 
-    /**
-     * Imprime la matriz completa. Util para ver los huecos con tus ojos.
-     */
     public void imprimirMatriz() {
         System.out.print("EST\\HORA");
         for (int h = 0; h < NUM_HORAS; h++) {
@@ -81,7 +80,11 @@ public class AnalizadorMatriz {
         for (int f = 0; f < NUM_ESTACIONES; f++) {
             System.out.printf("EST-%03d ", f + 1);
             for (int h = 0; h < NUM_HORAS; h++) {
-                System.out.printf("%7.1f", pm25PorEstacionHora[f][h]);
+                if (pm25PorEstacionHora[f][h] == null) {
+                    System.out.printf("%7s", "-");
+                } else {
+                    System.out.printf("%7.1f", pm25PorEstacionHora[f][h]);
+                }
             }
             System.out.println();
         }
