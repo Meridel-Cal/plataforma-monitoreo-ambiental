@@ -92,14 +92,16 @@ Relaciona lo aprendido con la Plataforma de Monitoreo Ambiental Urbano.
 
 Registra los commits que muestran tu aporte individual.
 
-| Commit | Mensaje | Que demuestra |
-|---|---|---|
-| `[2a3973b]` | `Agregar decisiones de diseño de la Semana 02 (TAD, redimensionamiento, matriz)` | La documentación técnica de las decisiones de ingeniería tomadas durante la semana. |
-| `[0e179f8]` | `Se agrega bitácora grupal de la Semana 02` | La reflexión individual y grupal sobre el aprendizaje, evidencias y análisis del laboratorio. |
-| `[129268b]` | `Agregar métricas de redimensionamiento al main para evidencia del experimento` | La implementación del experimento de medición de la Fase 2.1 (5 redimensionamientos, 310 copias). |
-| `[5dce540]` | `Resolver cero fantasma en AnalizadorMatriz usando Double y corrigiendo promedios` | La distinción entre ausencia y valor cero en la matriz estación × hora. |
+| Commit | Mensaje                                                                               | Que demuestra |
+|---|---------------------------------------------------------------------------------------|---|
+| `[5fe2809]` | `Agregar contrato formal del TAD RepositorioLecturas (Fase 0)`                        | El documento del contrato TAD con operaciones públicas, privadas, invariantes y complejidad computacional. |
+| `[799d165]` | `Actualizar bitácora S02 con hashes reales y preguntas de la guia`                    | La actualización final de la bitácora con los commits correctos del repositorio. |
+| `[2a3973b]` | `Agregar decisiones de diseño de la Semana 02 (TAD, redimensionamiento, matriz)`      | La documentación técnica de las decisiones de ingeniería tomadas durante la semana. |
+| `[b1792f8]` | `Se agrega bitácora grupal de la Semana 02`                                           | La reflexión individual y grupal sobre el aprendizaje, evidencias y análisis del laboratorio. |
+| `[129268b]` | `Agregar métricas de redimensionamiento al main para evidencia del experimento`       | La implementación del experimento de medición de la Fase 2.1 (5 redimensionamientos, 310 copias). |
+| `[5dce540]` | `Resolver cero fantasma en AnalizadorMatriz usando Double y corrigiendo promedios`    | La distinción entre ausencia y valor cero en la matriz estación × hora. |
 | `[447a23a]` | `Completar TAD RepositorioLecturas con redimensionamiento, compactación y contadores` | La solución al problema del techo con medición empírica de copias. |
-| `[76c4307]` | `Initial commit` | La estructura inicial del proyecto con la ingesta de la Semana 1. |
+| `[76c4307]` | `Initial commit`                                                                      | La estructura inicial del proyecto con la ingesta de la Semana 1. |
 
 ## 10. Reexplicacion final
 
@@ -119,6 +121,23 @@ Responde con honestidad:
    Con 8.000 estaciones, ¿qué estructura permite buscar un dato específico en menos de O(n) sin recorrer todo el arreglo?
 4. **Qué parte del trabajo fue realmente del equipo:**
    El diagnóstico del "techo" de 10 lecturas, la elección de la compactación para `eliminar()` y la justificación del uso de `Double` para resolver el cero fantasma.
+
+## 12. Preguntas específicas de la guía (Sección 54)
+
+1. **Explica qué es un TAD sin utilizar las palabras: abstracto, interfaz, implementación. (Máximo 5 líneas)**
+   Un Tipo Abstracto de Dato es un contrato que define qué operaciones puede realizar una estructura de datos y qué resultados debe devolver, sin revelar cómo está construida por dentro. Es como un control remoto: sabes qué botones presionar para cambiar el canal, pero no necesitas saber cómo funciona el televisor internamente para usarlo.
+
+2. **¿Cuántas copias realizó tu repositorio al cargar las 211 filas utilizando crecimiento de uno en uno? ¿Cuántas realizó utilizando duplicación? ¿Qué concluyes?**
+   Con crecimiento de uno en uno, el repositorio habría realizado aproximadamente 20.000 copias. Con la estrategia de duplicación, solo realizó 310 copias y 5 redimensionamientos. Concluyo que duplicar la capacidad es drásticamente más eficiente, ya que reduce el costo computacional de reubicar los datos en un 98%, demostrando la ventaja del costo amortizado.
+
+3. **¿Qué estrategia elegiste para eliminar()? Compactar o Marcar. Justifica tu decisión.**
+   Elegimos la estrategia de **Compactar**. Justificación: Al mover los elementos hacia la izquierda y reducir el contador `cantidad`, mantenemos el arreglo contiguo y sin huecos. Esto simplifica enormemente los recorridos futuros y la búsqueda secuencial, evitando tener que verificar un arreglo paralelo de booleanos o lidiar con posiciones `null` intermedias que complicarían la lógica de todo el sistema.
+
+4. **¿Cómo resolviste el problema del cero fantasma? Explica por qué descartaste las otras alternativas.**
+   Resolvimos el problema cambiando la matriz de `double[][]` a `Double[][]`, permitiendo que las celdas sin datos sean `null` en lugar de `0.0`. Descartamos usar un valor centinela (como `-1`) porque podría confundirse con una medición real en el futuro. También descartamos una matriz paralela de `boolean[][]` porque duplicaría innecesariamente el consumo de memoria del sistema.
+
+5. **Tu método `buscarPorEstacion()` recorre el arreglo completo en el peor caso. Si mañana la ciudad tuviera 8.000 estaciones, ¿seguiría siendo una solución adecuada? Responde con un número, no únicamente con una opinión.**
+   No, no sería una solución adecuada. Con 8.000 estaciones, en el peor de los casos (cuando la estación buscada es la última o no existe), el método realizaría exactamente **8.000 comparaciones** (complejidad O(n)). Este número de operaciones por cada búsqueda haría que el sistema sea demasiado lento para consultas en tiempo real, por lo que se requeriría una estructura como una tabla hash o un árbol de búsqueda.
 
 ## Uso de Inteligencia Artificial
 
@@ -142,3 +161,4 @@ El equipo revisó, adaptó y comprendió todas las soluciones propuestas, asegur
 - [x] Registre mis commits y mi aporte individual.
 - [x] Deje claro que queda pendiente.
 - [x] Renombre el archivo con el formato `s02-nombre.md`.
+- [x] Respondi las 5 preguntas obligatorias de la Sección 54 de la guía.
