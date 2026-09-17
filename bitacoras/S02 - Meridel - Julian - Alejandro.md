@@ -94,10 +94,12 @@ Registra los commits que muestran tu aporte individual.
 
 | Commit | Mensaje | Que demuestra |
 |---|---|---|
-| `[447a23a]` | `Completar TAD RepositorioLecturas con redimensionamiento, compactación y contadores` | La solución al problema del techo con medición empírica de copias. |
+| `[2a3973b]` | `Agregar decisiones de diseño de la Semana 02 (TAD, redimensionamiento, matriz)` | La documentación técnica de las decisiones de ingeniería tomadas durante la semana. |
+| `[0e179f8]` | `Se agrega bitácora grupal de la Semana 02` | La reflexión individual y grupal sobre el aprendizaje, evidencias y análisis del laboratorio. |
+| `[129268b]` | `Agregar métricas de redimensionamiento al main para evidencia del experimento` | La implementación del experimento de medición de la Fase 2.1 (5 redimensionamientos, 310 copias). |
 | `[5dce540]` | `Resolver cero fantasma en AnalizadorMatriz usando Double y corrigiendo promedios` | La distinción entre ausencia y valor cero en la matriz estación × hora. |
-| `[129268b]` | `Agregar métricas de redimensionamiento al main para evidencia del experimento` | La implementación del experimento de medición de la Fase 2.1. |
-| `[76c4307]` | `Almacenamiento con TAD, redimensionamiento y matriz estacion-hora` | El commit de consolidación de la entrega de la Semana 2. |
+| `[447a23a]` | `Completar TAD RepositorioLecturas con redimensionamiento, compactación y contadores` | La solución al problema del techo con medición empírica de copias. |
+| `[76c4307]` | `Initial commit` | La estructura inicial del proyecto con la ingesta de la Semana 1. |
 
 ## 10. Reexplicacion final
 
