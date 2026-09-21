@@ -15,12 +15,12 @@
 
 public class RepositorioLecturas {
 
-    private static final int CAPACIDAD_INICIAL = 10;
+    private static final int CAPACIDAD_INICIAL = 10; // Capacidad baja para probar el redimensionamiento
 
-    private LecturaSensor[] lecturas;
-    private int cantidad;
+    private LecturaSensor[] lecturas; // Arreglo interno
+    private int cantidad;             // Número real de elementos almacenados
 
-    // Contadores para el experimento de la Fase 2.1
+    // Métricas para el experimento
     private int redimensionamientos = 0;
     private int copiasRealizadas = 0;
 
@@ -29,6 +29,7 @@ public class RepositorioLecturas {
         this.cantidad = 0;
     }
 
+    // Agrega al final. Si está lleno, duplica la capacidad automáticamente.
     public boolean agregar(LecturaSensor lectura) {
         if (cantidad == lecturas.length) {
             redimensionar();
@@ -38,6 +39,7 @@ public class RepositorioLecturas {
         return true;
     }
 
+    // Retorna el elemento si el índice es válido, de lo contrario null.
     public LecturaSensor obtener(int posicion) {
         if (posicion < 0 || posicion >= cantidad) {
             return null;
@@ -45,24 +47,27 @@ public class RepositorioLecturas {
         return lecturas[posicion];
     }
 
+    // Retorna la cantidad de elementos reales (no la capacidad del arreglo).
     public int tamano() {
         return cantidad;
     }
 
+    // Elimina el elemento y compacta el arreglo hacia la izquierda para evitar huecos.
     public void eliminar(int posicion) {
         if (posicion < 0 || posicion >= cantidad) {
             return;
         }
-        // Estrategia de compactación
         for (int i = posicion; i < cantidad - 1; i++) {
             lecturas[i] = lecturas[i + 1];
         }
-        lecturas[cantidad - 1] = null; // Evitar fuga de memoria
+        lecturas[cantidad - 1] = null; // Limpia la referencia duplicada
         cantidad--;
     }
 
+    // Búsqueda secuencial. Retorna la primera coincidencia o null.
     public LecturaSensor buscarPorEstacion(String idSensor) {
         for (int i = 0; i < cantidad; i++) {
+            //Se usa equal porque se comparan los valores NO la memoria
             if (lecturas[i].getIdSensor().equals(idSensor)) {
                 return lecturas[i];
             }
@@ -70,12 +75,14 @@ public class RepositorioLecturas {
         return null;
     }
 
+    // Reemplaza el elemento si la posición es válida.
     public void actualizar(int posicion, LecturaSensor nueva) {
         if (posicion >= 0 && posicion < cantidad) {
             lecturas[posicion] = nueva;
         }
     }
 
+    // Crea un nuevo arreglo con el doble de capacidad y copia los elementos.
     private void redimensionar() {
         int nuevaCapacidad = lecturas.length * 2;
         LecturaSensor[] nuevoArreglo = new LecturaSensor[nuevaCapacidad];
@@ -88,8 +95,10 @@ public class RepositorioLecturas {
         this.lecturas = nuevoArreglo;
     }
 
+    // Calcula el promedio evitando división por cero.
     public double promedioPm25() {
         if (cantidad == 0) return 0.0;
+
         double suma = 0;
         int elementosReales = 0;
         for (int i = 0; i < cantidad; i++) {
@@ -98,10 +107,11 @@ public class RepositorioLecturas {
                 elementosReales++;
             }
         }
+        //Operador ternario: si se cumple se ejecuta el despues del ? si no se cumple se ejecuta despues de los :
         return elementosReales == 0 ? 0.0 : suma / elementosReales;
     }
 
-    // Getters para el experimento
+    // Getters para las métricas del experimento
     public int getRedimensionamientos() { return redimensionamientos; }
     public int getCopiasRealizadas() { return copiasRealizadas; }
 }

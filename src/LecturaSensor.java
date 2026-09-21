@@ -12,19 +12,21 @@
 
 public class LecturaSensor {
 
-    // Rangos fisicos aceptables. Constantes, no numeros magicos.
+    // Constantes públicas para evitar "números mágicos" y permitir validación externa.
     public static final double TEMP_MIN = -40.0;
     public static final double TEMP_MAX = 60.0;
     public static final double HUMEDAD_MIN = 0.0;
     public static final double HUMEDAD_MAX = 100.0;
     public static final double PM25_MIN = 0.0;
 
+    // 'private': Encapsulamiento. 'final': Inmutabilidad (una lectura registrada no cambia).
     private final String idSensor;
     private final String timestamp;
     private final double temperatura;
     private final double humedad;
     private final double pm25;
 
+    // Constructor: Asigna los valores una sola vez.
     public LecturaSensor(String idSensor, String timestamp,
                          double temperatura, double humedad, double pm25) {
         this.idSensor = idSensor;
@@ -34,24 +36,25 @@ public class LecturaSensor {
         this.pm25 = pm25;
     }
 
+    // Getters: Único punto de acceso seguro a los atributos privados.
     public String getIdSensor() { return idSensor; }
     public String getTimestamp() { return timestamp; }
     public double getTemperatura() { return temperatura; }
     public double getHumedad() { return humedad; }
     public double getPm25() { return pm25; }
 
-    /**
-     * Extrae la hora del timestamp con formato "yyyy-MM-dd HH:mm".
-     * @return hora entre 0 y 23
+    /*
+     * Extrae la hora del string con formato "yyyy-MM-dd HH:mm".
+     * substring(11, 13) toma exactamente los 2 caracteres de la hora (índices 11 y 12).
      */
     public int getHora() {
         String parteHora = timestamp.substring(11, 13);
         return Integer.parseInt(parteHora);
     }
 
-    /**
-     * Verifica que los tres valores esten dentro de rangos fisicamente posibles.
-     * @return true si la lectura es utilizable para calculos
+    /*
+     * Valida que los datos tengan sentido físico real.
+     * Usa "Early Return" (retorno temprano) para evitar anidación excesiva de if/else.
      */
     public boolean esValida() {
         if (temperatura < TEMP_MIN || temperatura > TEMP_MAX) return false;
@@ -60,9 +63,13 @@ public class LecturaSensor {
         return true;
     }
 
+    /*
+     * Sobrescribe toString() para representar el objeto como texto legible.
+     * Fundamental para debugging y pruebas en consola.
+     */
     @Override
     public String toString() {
         return idSensor + " | " + timestamp
-             + " | T=" + temperatura + " | H=" + humedad + " | PM=" + pm25;
+                + " | T=" + temperatura + " | H=" + humedad + " | PM=" + pm25;
     }
 }
