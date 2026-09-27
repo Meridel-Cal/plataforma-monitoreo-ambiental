@@ -57,6 +57,7 @@ public class IngestaSensores {
         // 👇 NUEVO: Integración del experimento de la Semana 3
         System.out.println("\n=== EXPERIMENTOS SEMANA 3 ===");
         BancoDePruebas.experimentoUno();
+        BancoDePruebas.experimentoDos();
     }
 
     /*
