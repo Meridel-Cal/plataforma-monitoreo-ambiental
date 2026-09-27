@@ -61,6 +61,7 @@ public class IngestaSensores {
         BancoDePruebas.experimentoTres();
         BancoDePruebas.experimentoCuatro();
         BancoDePruebas.experimentoCinco();
+        BancoDePruebas.experimentoSeis();
     }
 
     /*

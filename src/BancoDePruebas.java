@@ -315,5 +315,63 @@ public class BancoDePruebas {
                 estado
         );
     }
+    /**
+     * Experimento 6:
+     * Tabla de mediciones con tiempos reales y comparaciones.
+     *
+     * Mide los tamaños exigidos por la guía: 1.000, 100.000 y 1.000.000.
+     */
+    public static void experimentoSeis() {
+
+        System.out.println("=== EXPERIMENTO 6: TABLA DE MEDICIONES ===");
+        System.out.println();
+
+        System.out.printf("%-12s %-10s %-10s %-15s %-15s%n",
+                "Tamaño",
+                "Lineal",
+                "Binaria",
+                "T. Lineal (ms)",
+                "T. Binaria (ms)"
+        );
+        System.out.println("--------------------------------------------------------------");
+
+        int[] tamanos = {1_000, 100_000, 1_000_000};
+
+        for (int n : tamanos) {
+
+            // Generar datos ordenados por timestamp
+            LecturaSensor[] datos = GeneradorDatos.generar(n);
+            String objetivo = GeneradorDatos.timestampEnPosicion(n - 1);
+
+            // ---------- MEDICIÓN LINEAL ----------
+            long inicioLineal = System.nanoTime();
+
+            BuscadorLecturas.busquedaLinealPorTimestamp(datos, objetivo);
+            int compLineal = BuscadorLecturas.getComparaciones();
+
+            long finLineal = System.nanoTime();
+            double tiempoLinealMs = (finLineal - inicioLineal) / 1_000_000.0;
+
+            // ---------- MEDICIÓN BINARIA ----------
+            long inicioBinaria = System.nanoTime();
+
+            BuscadorLecturas.busquedaBinariaPorTimestamp(datos, objetivo);
+            int compBinaria = BuscadorLecturas.getComparaciones();
+
+            long finBinaria = System.nanoTime();
+            double tiempoBinariaMs = (finBinaria - inicioBinaria) / 1_000_000.0;
+
+            // Imprimir fila de la tabla
+            System.out.printf("%-12d %-10d %-10d %-15.3f %-15.3f%n",
+                    n,
+                    compLineal,
+                    compBinaria,
+                    tiempoLinealMs,
+                    tiempoBinariaMs
+            );
+        }
+
+        System.out.println();
+    }
 }
 
