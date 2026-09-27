@@ -53,6 +53,10 @@ public class IngestaSensores {
             // %02d: hora con 2 dígitos. %.2f: promedio con 2 decimales.
             System.out.printf("Hora %02d -> PM2.5 promedio: %.2f%n", h, analizador.promedioDeHora(h));
         }
+
+        // 👇 NUEVO: Integración del experimento de la Semana 3
+        System.out.println("\n=== EXPERIMENTOS SEMANA 3 ===");
+        BancoDePruebas.experimentoUno();
     }
 
     /*
