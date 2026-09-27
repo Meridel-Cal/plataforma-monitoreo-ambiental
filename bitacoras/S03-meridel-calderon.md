@@ -158,3 +158,54 @@ Revisé, adapté y comprendí todas las soluciones propuestas. El código final 
 - [x] Dejé claro qué queda pendiente (algoritmos de ordenamiento).
 - [x] Renombré el archivo con el formato `s03-meridel-calderon.md`.
 - [x] Respondí las 5 preguntas obligatorias adaptadas a la guía de la Semana 03.
+
+## 44. Preguntas de pensamiento crítico
+
+**Pregunta 1: Una empresa tiene un millón de registros y realiza únicamente cinco búsquedas durante todo el día. ¿Tiene sentido diseñar toda la estrategia de almacenamiento alrededor de una búsqueda binaria? ¿Qué otros costos o factores considerarías?**
+
+No, no tiene sentido. Diseñar una estrategia de almacenamiento compleja solo para optimizar cinco búsquedas diarias es un caso clásico de sobre-ingeniería. La búsqueda binaria exige que los datos estén ordenados. Mantener un millón de registros ordenados tiene un costo altísimo: cada vez que llega un dato nuevo, insertarlo en la posición correcta de un arreglo implica mover (copiar) todos los elementos posteriores, lo cual es una operación $O(n)$ muy costosa en tiempo y CPU.
+Para solo cinco búsquedas al día, una búsqueda lineal ($O(n)$) tardaría unos milisegundos más, un costo imperceptible para el usuario. El factor crítico aquí no es la velocidad de lectura, sino el costo de mantenimiento y escritura. En este escenario, es más eficiente almacenar los datos en el orden en que llegan y pagar el pequeño costo de recorrer el arreglo 5 veces, que pagar el enorme costo de reordenar el millón de registros constantemente.
+
+**Pregunta 2: Un algoritmo puede ser mucho más rápido que otro y, sin embargo, producir una respuesta incorrecta. ¿Por qué consideras que la corrección debe analizarse antes que la eficiencia?**
+
+Porque en ingeniería de software, la corrección es un requisito funcional (el sistema *debe* hacer lo que se espera), mientras que la eficiencia es un atributo de calidad (el sistema debe hacerlo *bien*). Un resultado rápido pero erróneo es, en la práctica, peor que un resultado lento pero correcto, porque genera una falsa sensación de seguridad.
+En nuestro proyecto, el Experimento 4 demostró esto perfectamente: la búsqueda binaria sobre PM2.5 es rapidísima ($O(\log n)$), pero devuelve falsos negativos silenciosos porque ignora su precondición. Si una plataforma ambiental usara ese algoritmo, reportaría que "no hay contaminación" cuando en realidad sí la hay, solo porque el algoritmo descartó la mitad correcta del arreglo. Primero se debe garantizar que la lógica resuelve el problema (corrección); solo cuando la solución es correcta, tiene sentido optimizarla (eficiencia).
+
+**Pregunta 3: Imagina que una plataforma consulta constantemente por timestamp, pero ocasionalmente necesita consultar por PM2.5. ¿Qué consecuencias tendría organizar los datos pensando principalmente en uno de estos campos?**
+
+Tendría consecuencias directas en el rendimiento y la arquitectura, obligándonos a tomar decisiones de compromiso (trade-offs). Si organizamos (ordenamos) los datos por `timestamp` para que las consultas frecuentes sean rápidas con búsqueda binaria ($O(\log n)$), automáticamente condenamos las consultas por `PM2.5` a ser búsquedas lineales ($O(n)$), porque el arreglo no estará ordenado por ese campo.
+La consecuencia funcional es que el sistema será muy responsivo para el caso de uso principal (reportes históricos por tiempo), pero se volverá lento cuando un analista quiera buscar picos de contaminación específicos. En un entorno real, si ambas consultas fueran frecuentes, no usaríamos un solo arreglo; crearíamos estructuras de datos paralelas o índices (como un árbol o tabla hash) para no sacrificar la eficiencia de ninguna de las dos operaciones.
+
+**Pregunta 4: Supón que tienes un conjunto de datos perfectamente ordenado y alguien modifica algunos registros sin conservar el orden. ¿Qué riesgos aparecen si el sistema continúa utilizando búsqueda binaria sin verificar las condiciones de los datos?**
+
+El riesgo principal es la **corrupción silenciosa de la información**. La búsqueda binaria no "verifica" si el arreglo está ordenado; asume ciegamente que lo está (su precondición). Si un registro se modifica y rompe el orden, el algoritmo tomará decisiones de descarte basadas en premisas falsas.
+El riesgo no es que el programa falle o lance una excepción (como un `ArrayIndexOutOfBoundsException`), sino que devolverá un `-1` (no encontrado) para un dato que sí existe en el sistema. En una plataforma de monitoreo, esto es catastrófico: los datos están ahí, ocupando memoria, pero el sistema es incapaz de encontrarlos, lo que lleva a reportes ambientales incompletos o erróneos sin que nadie reciba una alerta de error.
+
+**Pregunta 5: En ingeniería de software suele decirse: "Que funcione no significa que sea una buena solución." Relaciona esta afirmación con lo aprendido en las semanas 1, 2 y 3 del proyecto. ¿Qué ha cambiado en la manera en que analizas una solución desde que comenzó el proyecto?**
+
+Esta afirmación resume exactamente mi evolución durante el proyecto:
+*   **Semana 1:** "Que funcione" era leer el CSV e imprimirlo en consola. No era una buena solución porque los datos se perdían al cerrar el programa y no se validaban rangos físicos.
+*   **Semana 2:** "Que funcione" era guardar los datos en un arreglo. No era una buena solución porque el arreglo tenía un techo de 10 elementos (perdiendo el 95% de los datos) y la matriz de `double` distorsionaba los promedios con ceros fantasma.
+*   **Semana 3:** "Que funcione" era usar búsqueda binaria para todo. No era una buena solución porque, sin respetar las precondiciones, el algoritmo más rápido del mundo entrega mentiras.
+
+Lo que ha cambiado en mi análisis es que ya no me pregunto solo *"¿El código compila y corre sin errores?"*. Ahora me pregunto: *"¿Qué pasa si los datos crecen a un millón? ¿Qué pasa si el dato no existe? ¿Qué pasa si violo una regla oculta del algoritmo?"*. He pasado de pensar en el "camino feliz" (happy path) a pensar en la robustez, la escalabilidad (Big O) y la integridad de los estados del sistema.
+
+## 46. Criterio de finalización
+
+La Semana 3 está terminada cuando puedas responder afirmativamente:
+
+- [x] ¿Mi proyecto tiene un único main?
+- [x] ¿IngestaSensores sigue siendo el punto de entrada?
+- [x] ¿Puedo buscar linealmente por timestamp?
+- [x] ¿Puedo buscar binariamente por timestamp?
+- [x] ¿Sé explicar por qué la binaria requiere orden?
+- [x] ¿Sé explicar O(n) y O(log n)?
+- [x] ¿Sé explicar el bug del ciclo while que corregí (`inicio <= fin`)?
+- [x] ¿Sé explicar por qué String se compara con `equals()`?
+- [x] ¿Puedo demostrar el problema de PM2.5?
+- [x] ¿Tengo mediciones propias?
+- [x] ¿Tengo la traza de la búsqueda binaria?
+- [x] ¿Documenté la decisión de diseño?
+- [x] ¿Mi proyecto compila?
+- [x] ¿Mis cambios están registrados en Git?
+- [x] ¿Puedo explicar qué agregué a la aplicación sin decir que construí "otro programa"?
