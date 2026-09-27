@@ -58,6 +58,7 @@ public class IngestaSensores {
         System.out.println("\n=== EXPERIMENTOS SEMANA 3 ===");
         BancoDePruebas.experimentoUno();
         BancoDePruebas.experimentoDos();
+        BancoDePruebas.experimentoTres();
     }
 
     /*

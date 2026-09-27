@@ -119,5 +119,47 @@ public class BancoDePruebas {
         System.out.println();
     }
 
+    /**
+     * Compara búsqueda de un timestamp inexistente.
+     */
+    public static void experimentoTres() {
+
+        System.out.println(
+                "=== EXPERIMENTO 3: DATO INEXISTENTE ==="
+        );
+
+        LecturaSensor[] datos =
+                GeneradorDatos.generar(100_000);
+
+        String objetivo =
+                GeneradorDatos.timestampInexistente();
+
+        BuscadorLecturas.busquedaLinealPorTimestamp(
+                datos,
+                objetivo
+        );
+
+        int lineal =
+                BuscadorLecturas.getComparaciones();
+
+        BuscadorLecturas.busquedaBinariaPorTimestamp(
+                datos,
+                objetivo
+        );
+
+        int binaria =
+                BuscadorLecturas.getComparaciones();
+
+        System.out.println(
+                "Lineal  -> comparaciones: " + lineal
+        );
+
+        System.out.println(
+                "Binaria -> comparaciones: " + binaria
+        );
+
+        System.out.println();
+    }
+
 }
 
