@@ -49,3 +49,25 @@ Formato: cada entrada con fecha, decision, alternativas consideradas, justificac
 - **Alternativas:** A) asumir posición válida B) validar rangos antes de acceder.
 - **Elegida:** B) validar rangos.
 - **Justificacion:** obtener(), actualizar(), eliminar() verifican posicion >= 0 && posicion < cantidad. Previene ArrayIndexOutOfBoundsException y estados inconsistentes. Retorna null o no opera si posición inválida. Encapsulamiento protege estado interno.
+
+## S3 - Algoritmos de busqueda y complejidad - 2026-09-21
+
+### Decision 1: Algoritmo de busqueda por timestamp
+- **Alternativas:** A) busqueda lineal O(n) B) busqueda binaria O(log n).
+- **Elegida:** B) busqueda binaria.
+- **Justificacion:** `GeneradorDatos` produce timestamps en orden cronologico ascendente, cumpliendo la precondicion de la busqueda binaria. Reduce comparaciones de O(n) a O(log n). Para 100,000 lecturas: lineal ~100,000 comparaciones vs binaria ~17 comparaciones.
+
+### Decision 2: Tratamiento de precondiciones en algoritmos
+- **Alternativas:** A) aplicar busqueda binaria a cualquier campo B) respetar precondicion de ordenamiento.
+- **Elegida:** B) respetar precondicion.
+- **Justificacion:** el experimento 4 demuestra que aplicar busqueda binaria sobre PM2.5 (no ordenado) produce resultados incorrectos silenciosamente. La busqueda lineal encuentra el 100% de los valores, la binaria falla. Las precondiciones no son opcionales: son requisitos criticos para la correctitud del algoritmo.
+
+### Decision 3: Medicion empirica de complejidad
+- **Alternativas:** A) confiar en teoria asintotica B) medir comparaciones reales con contador estatico.
+- **Elegida:** B) medicion empirica.
+- **Justificacion:** la variable estatica `comparaciones` en `BuscadorLecturas` permite cuantificar el costo real de cada algoritmo. Los experimentos 1, 2, 3 y 4 validan empiricamente la teoria: lineal crece proporcional a n, binaria crece logaritmico, y el peor caso (dato inexistente) evidencia la diferencia abismal.
+
+### Decision 4: Pregunta pendiente - ordenamiento previo
+- **Pregunta:** ¿Conviene ordenar los datos antes de realizar las busquedas?
+- **Estado:** pendiente de analisis.
+- **Justificacion:** ordenar tiene costo O(n log n). Si se realizan multiples busquedas, el costo de ordenar se amortiza. Si es una sola busqueda, la lineal puede ser mas eficiente. Esta decision se retomara en la Semana 4 al evaluar estructuras de datos ordenadas.
