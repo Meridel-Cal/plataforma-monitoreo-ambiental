@@ -223,7 +223,97 @@ public class BancoDePruebas {
 
         System.out.println();
     }
+    /**
+     * Experimento 5:
+     * Casos de prueba mínimos para búsqueda binaria.
+     *
+     * Verifica:
+     * - primer elemento
+     * - elemento intermedio
+     * - último elemento
+     * - elemento existente
+     * - elemento inexistente
+     * - arreglo pequeño
+     * - arreglo grande
+     */
+    public static void experimentoCinco() {
 
+        System.out.println("=== EXPERIMENTO 5: CASOS DE PRUEBA BINARIA ===");
+        System.out.println();
 
+        // ---------- ARREGLO PEQUEÑO (10 elementos) ----------
+        System.out.println("--- ARREGLO PEQUEÑO (n=10) ---");
+        LecturaSensor[] pequenos = GeneradorDatos.generar(10);
+
+        // Primer elemento (posición 0)
+        probarBinaria(pequenos, "Primer elemento",
+                GeneradorDatos.timestampEnPosicion(0), 0);
+
+        // Elemento intermedio (posición 5)
+        probarBinaria(pequenos, "Elemento intermedio",
+                GeneradorDatos.timestampEnPosicion(5), 5);
+
+        // Último elemento (posición 9)
+        probarBinaria(pequenos, "Último elemento",
+                GeneradorDatos.timestampEnPosicion(9), 9);
+
+        // Elemento existente (posición 3)
+        probarBinaria(pequenos, "Elemento existente (pos 3)",
+                GeneradorDatos.timestampEnPosicion(3), 3);
+
+        // Elemento inexistente
+        probarBinaria(pequenos, "Elemento inexistente",
+                GeneradorDatos.timestampInexistente(), -1);
+
+        System.out.println();
+
+        // ---------- ARREGLO GRANDE (100_000 elementos) ----------
+        System.out.println("--- ARREGLO GRANDE (n=100,000) ---");
+        LecturaSensor[] grandes = GeneradorDatos.generar(100_000);
+
+        probarBinaria(grandes, "Primer elemento",
+                GeneradorDatos.timestampEnPosicion(0), 0);
+
+        probarBinaria(grandes, "Elemento intermedio",
+                GeneradorDatos.timestampEnPosicion(50_000), 50_000);
+
+        probarBinaria(grandes, "Último elemento",
+                GeneradorDatos.timestampEnPosicion(99_999), 99_999);
+
+        probarBinaria(grandes, "Elemento existente (pos 12345)",
+                GeneradorDatos.timestampEnPosicion(12_345), 12_345);
+
+        probarBinaria(grandes, "Elemento inexistente",
+                GeneradorDatos.timestampInexistente(), -1);
+
+        System.out.println();
+    }
+
+    /**
+     * Auxiliar: ejecuta la búsqueda binaria y reporta el resultado.
+     */
+    private static void probarBinaria(
+            LecturaSensor[] datos,
+            String descripcion,
+            String objetivo,
+            int esperado) {
+
+        int resultado = BuscadorLecturas.busquedaBinariaPorTimestamp(
+                datos,
+                objetivo
+        );
+
+        int comparaciones = BuscadorLecturas.getComparaciones();
+
+        String estado = (resultado == esperado) ? "OK" : "FALLA";
+
+        System.out.printf("  %-30s esperado=%6d  obtenido=%6d  comparaciones=%4d  [%s]%n",
+                descripcion,
+                esperado,
+                resultado,
+                comparaciones,
+                estado
+        );
+    }
 }
 
