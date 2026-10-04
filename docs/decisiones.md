@@ -71,3 +71,25 @@ Formato: cada entrada con fecha, decision, alternativas consideradas, justificac
 - **Pregunta:** ¿Conviene ordenar los datos antes de realizar las busquedas?
 - **Estado:** pendiente de analisis.
 - **Justificacion:** ordenar tiene costo O(n log n). Si se realizan multiples busquedas, el costo de ordenar se amortiza. Si es una sola busqueda, la lineal puede ser mas eficiente. Esta decision se retomara en la Semana 4 al evaluar estructuras de datos ordenadas.
+
+## S4 - Algoritmos de ordenamiento y efecto colateral - 2026-10-05
+
+### Decision 5: Pivote de QuickSort
+- **Alternativas:** A) pivote fijo en el primer elemento B) pivote aleatorio C) mediana de tres (primero, medio, último).
+- **Elegida:** C) mediana de tres.
+- **Justificacion:** el experimento 4 demuestra que QuickSort con pivote fijo en el primer elemento produce `StackOverflowError` con datos ordenados cronologicamente (como llegan de la red de sensores). La mediana de tres garantiza que el pivote no sea ni el minimo ni el maximo del subarreglo, evitando particiones extremadamente desbalanceadas. Es determinista (no depende de aleatoriedad) y tiene costo O(1). Con esta correccion, QuickSort mantiene complejidad O(n log n) incluso con datos ordenados.
+
+### Decision 6: Efecto colateral del ordenamiento sobre la busqueda binaria
+- **Alternativas:** A) trabajar sobre una copia del arreglo B) restaurar el orden por timestamp despues del ranking C) mantener indices separados para cada criterio.
+- **Elegida:** A) trabajar sobre una copia del arreglo.
+- **Justificacion:** el experimento 5 demuestra que ordenar el arreglo por PM2.5 para generar un ranking destruye el orden por timestamp, rompiendo la precondicion de la busqueda binaria. Trabajar sobre una copia es la solucion mas simple y segura: preserva el orden original sin costo adicional de reordenamiento. El costo de memoria es aceptable para el tamaño de datos de la plataforma. La busqueda binaria por timestamp sigue funcionando despues de generar rankings por PM2.5.
+
+### Decision 7: Eleccion de algoritmo segun el estado inicial de los datos
+- **Alternativas:** A) usar siempre MergeSort/HeapSort B) usar Insercion para datos casi ordenados C) usar el mismo algoritmo sin importar el estado.
+- **Elegida:** B) usar Insercion para datos casi ordenados, MergeSort/HeapSort para datos desordenados grandes.
+- **Justificacion:** los experimentos 2 y 3 muestran que Insercion es excelente con datos ordenados o casi ordenados (~9.999 comparaciones para 10.000 elementos), pero su crecimiento es O(n²) con datos desordenados (~2.500 millones de comparaciones para 100.000 elementos). MergeSort y HeapSort mantienen crecimiento O(n log n) (~1.5 millones de comparaciones para 100.000 elementos). La decision debe basarse en como llegan los datos: si llegan cronologicamente (como los sensores), Insercion es eficiente; si estan desordenados, se requiere un algoritmo avanzado.
+
+### Decision 8: Costo de comparaciones vs intercambios
+- **Alternativas:** A) minimizar comparaciones B) minimizar intercambios C) balancear ambos.
+- **Elegida:** C) balancear ambos segun el costo de cada operacion.
+- **Justificacion:** el experimento 1 muestra que Seleccion hace ~50 millones de comparaciones pero solo ~10.000 intercambios, mientras Burbuja hace ~50 millones de comparaciones y ~25 millones de intercambios. Si los registros son grandes (como `LecturaSensor` con timestamp, id, temperatura, humedad, PM2.5), moverlos en memoria puede ser mas costoso que compararlos. En ese escenario, Seleccion puede ser preferible a Burbuja aunque ambos sean O(n²). La eficiencia no se mide solo por comparaciones, sino por el costo real de cada operacion.
