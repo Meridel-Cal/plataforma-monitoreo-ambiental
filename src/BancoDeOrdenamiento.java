@@ -12,7 +12,7 @@ public class BancoDeOrdenamiento {
         experimentoUno();
         experimentoDos();
         experimentoTres();
-        // experimentoCuatro();  <- FASE 4
+        experimentoCuatro();
         // experimentoCinco();   <- FASE 5
     }
 
