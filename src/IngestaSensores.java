@@ -62,6 +62,15 @@ public class IngestaSensores {
         BancoDePruebas.experimentoCuatro();
         BancoDePruebas.experimentoCinco();
         BancoDePruebas.experimentoSeis();
+
+        // ===== SEMANA 4: ORDENAMIENTOS =====
+        System.out.println("\n===== SEMANA 4: ORDENAMIENTOS =====");
+        BancoDeOrdenamiento banco = new BancoDeOrdenamiento();
+        banco.experimentoUno();
+        banco.experimentoDos();
+        banco.experimentoTres();
+        banco.experimentoCuatro();
+        banco.experimentoCinco();
     }
 
     /*
