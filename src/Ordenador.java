@@ -169,6 +169,14 @@ public class Ordenador {
     }
 
     private static int particionar(LecturaSensor[] datos, int inicio, int fin) {
+        // --- Mediana de tres: elegir mejor pivote ---
+        int medio = inicio + (fin - inicio) / 2;
+        if (comparar(datos[medio], datos[inicio]) < 0) intercambiar(datos, inicio, medio);
+        if (comparar(datos[fin], datos[inicio]) < 0) intercambiar(datos, inicio, fin);
+        if (comparar(datos[fin], datos[medio]) < 0) intercambiar(datos, medio, fin);
+        intercambiar(datos, inicio, medio);
+        // --------------------------------------------
+
         LecturaSensor pivote = datos[inicio];
         int limite = inicio;
         for (int i = inicio + 1; i <= fin; i++) {
