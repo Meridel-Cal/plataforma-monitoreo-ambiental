@@ -13,7 +13,7 @@ public class BancoDeOrdenamiento {
         experimentoDos();
         experimentoTres();
         experimentoCuatro();
-        // experimentoCinco();   <- FASE 5
+        experimentoCinco();
     }
 
     // ---------- utilidades ----------
