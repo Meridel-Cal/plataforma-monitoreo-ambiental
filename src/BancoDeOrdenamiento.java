@@ -11,7 +11,7 @@ public class BancoDeOrdenamiento {
     public static void main(String[] args) {
         experimentoUno();
         experimentoDos();
-        // experimentoTres();    <- FASE 3
+        experimentoTres();
         // experimentoCuatro();  <- FASE 4
         // experimentoCinco();   <- FASE 5
     }
