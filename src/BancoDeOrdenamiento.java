@@ -10,7 +10,7 @@ public class BancoDeOrdenamiento {
 
     public static void main(String[] args) {
         experimentoUno();
-        // experimentoDos();     <- FASE 2
+        experimentoDos();
         // experimentoTres();    <- FASE 3
         // experimentoCuatro();  <- FASE 4
         // experimentoCinco();   <- FASE 5
