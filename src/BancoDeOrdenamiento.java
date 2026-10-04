@@ -42,7 +42,7 @@ public class BancoDeOrdenamiento {
 
     // ---------- EXPERIMENTO 1 ----------
     /** Los tres algoritmos simples sobre 10.000 lecturas DESORDENADAS. */
-    private static void experimentoUno() {
+    public static void experimentoUno() {
         System.out.println("=== EXP 1: ALGORITMOS SIMPLES, 10.000 LECTURAS DESORDENADAS ===");
         LecturaSensor[] base = desordenar(GeneradorDatos.generar(10_000));
         LecturaSensor[] a = copiar(base);
@@ -62,7 +62,7 @@ public class BancoDeOrdenamiento {
 
     // ---------- EXPERIMENTO 2 ----------
     /** Los mismos tres algoritmos sobre datos que YA VIENEN ORDENADOS. */
-    private static void experimentoDos() {
+    public static void experimentoDos() {
         System.out.println("=== EXP 2: LOS MISMOS TRES, PERO CON DATOS YA ORDENADOS ===");
         System.out.println("(asi es como llegan de la red de sensores: en orden cronologico)");
         LecturaSensor[] base = GeneradorDatos.generar(10_000);
@@ -83,7 +83,7 @@ public class BancoDeOrdenamiento {
 
     // ---------- EXPERIMENTO 3 ----------
     /** Simples contra avanzados, a escala creciente. */
-    private static void experimentoTres() {
+    public static void experimentoTres() {
         System.out.println("=== EXP 3: SIMPLES CONTRA AVANZADOS ===");
         int[] tamanos = {1_000, 10_000, 100_000};
         for (int n : tamanos) {
@@ -107,8 +107,8 @@ public class BancoDeOrdenamiento {
 
     // ---------- EXPERIMENTO 4 ----------
     /** QuickSort con pivote fijo: primero con datos desordenados, luego con datos reales. */
-    private static void experimentoCuatro() {
-        System.out.println("=== EXP 4: QUICKSORT CON PIVOTE = PRIMER ELEMENTO ===");
+    public static void experimentoCuatro() {
+        System.out.println("=== EXP 4: QUICKSORT CON MEDIANA DE TRES ===");
         System.out.println("-- Caso A: 50.000 lecturas DESORDENADAS --");
         LecturaSensor[] revueltas = desordenar(GeneradorDatos.generar(50_000));
         long t = System.currentTimeMillis();
@@ -121,6 +121,7 @@ public class BancoDeOrdenamiento {
             t = System.currentTimeMillis();
             Ordenador.quickSortPivotePrimero(enOrden);
             reportar("QuickSort", System.currentTimeMillis() - t);
+            System.out.println("QuickSort funcionó correctamente con datos ordenados (gracias a mediana de tres).");
         } catch (StackOverflowError e) {
             System.out.println("QuickSort      -> StackOverflowError: el programa se quedo sin pila.");
             System.out.println("                  Comparaciones alcanzadas antes de morir: "
@@ -131,7 +132,7 @@ public class BancoDeOrdenamiento {
 
     // ---------- EXPERIMENTO 5 ----------
     /** Ordenar por PM2.5 para el ranking... y consultar por timestamp despues. */
-    private static void experimentoCinco() {
+    public static void experimentoCinco() {
         System.out.println("=== EXP 5: EL RANKING Y LA CONSULTA ===");
         LecturaSensor[] datos = GeneradorDatos.generar(100_000);
         String objetivo = GeneradorDatos.timestampEnPosicion(73_412);
