@@ -48,22 +48,23 @@ public class Ordenador {
     //  2.7  ALGORITMOS SIMPLES
     // =========================================================
     /**
-     * Ordenamiento burbuja.
+     * Ordenamiento burbuja con corte temprano.
      *
-     * TODO 1: este metodo hace el mismo trabajo aunque el arreglo
-     * ya venga ordenado. Agregale una bandera que detecte que en
-     * una pasada completa no hubo ningun intercambio, y corte ahi.
-     * Mide el antes y el despues con datos ya ordenados.
+     * TODO 1 RESUELTO: Se agregó bandera que detecta si no hubo
+     * intercambios en una pasada completa, cortando el ciclo.
      */
     public static void burbuja(LecturaSensor[] datos) {
         reiniciarContadores();
         int n = datos.length;
         for (int i = 0; i < n - 1; i++) {
+            boolean huboIntercambio = false;
             for (int j = 0; j < n - 1 - i; j++) {
                 if (comparar(datos[j], datos[j + 1]) > 0) {
                     intercambiar(datos, j, j + 1);
+                    huboIntercambio = true;
                 }
             }
+            if (!huboIntercambio) break;
         }
     }
 
