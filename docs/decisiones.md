@@ -23,7 +23,7 @@ Formato: cada entrada con fecha, decision, alternativas consideradas, justificac
 - **Elegida:** TEMP_MIN=-40, TEMP_MAX=60, HUM_MIN=0, HUM_MAX=100, PM_MIN=0, CODIGO_DESCONECTADO=-999
 - **Justificacion:** si cambian umbrales de la norma ambiental, se cambia en un solo lugar.
 
-## S2 - Donde viven los datos - 2026-09-16
+## S2 - Donde viven los datos - 2026-09-14
 
 ### Decision 1: Estrategia de crecimiento del repositorio
 - **Alternativas:** A) arreglo fijo grande (ej. 500) B) crecimiento de uno en uno C) duplicación de capacidad.
@@ -72,7 +72,7 @@ Formato: cada entrada con fecha, decision, alternativas consideradas, justificac
 - **Estado:** pendiente de analisis.
 - **Justificacion:** ordenar tiene costo O(n log n). Si se realizan multiples busquedas, el costo de ordenar se amortiza. Si es una sola busqueda, la lineal puede ser mas eficiente. Esta decision se retomara en la Semana 4 al evaluar estructuras de datos ordenadas.
 
-## S4 - Algoritmos de ordenamiento y efecto colateral - 2026-10-05
+## S4 - Algoritmos de ordenamiento y efecto colateral - 2026-09-28
 
 ### Decision 5: Pivote de QuickSort
 - **Alternativas:** A) pivote fijo en el primer elemento B) pivote aleatorio C) mediana de tres (primero, medio, último).
